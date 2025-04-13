@@ -269,7 +269,7 @@ const Products = () => {
       setLoading(false);
     }
   };
-
+  console.log("first");
   const removeFromCart = async (product) => {
     if (!user) navigate("/login");
     const backupCart = [...cart];

@@ -375,7 +375,7 @@ function PaymentDetails({
           <span>Payment Section</span>
           <span>
             <span className="payment-total-price">
-              <strong>Total Price:</strong> ₹{totalPrice}
+              Total Price:₹{totalPrice}
             </span>
             <span className="toggle-icon">{summaryExpanded ? "▲" : "▼"}</span>
           </span>

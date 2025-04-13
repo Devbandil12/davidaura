@@ -543,6 +543,12 @@ h2 {
 }
 
 @media (max-width: 480px) {
+  .button-razorpay{
+    align-self:"flex-end";
+    margin-top:20px;
+    
+  }
+  
   .checkout-wrapper {
     max-width: 1200px;
     margin: 50px auto;

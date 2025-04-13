@@ -372,13 +372,13 @@ function PaymentDetails({
           className="summary-header"
           onClick={() => setSummaryExpanded(!summaryExpanded)}
         >
-          <span>Payment Section</span>
-          <span>
+          
+         
             <span className="payment-total-price">
               Total Price:₹{totalPrice}
             </span>
             <span className="toggle-icon">{summaryExpanded ? "▲" : "▼"}</span>
-          </span>
+          
         </div>
         {summaryExpanded && (
           <div className="summary-details">

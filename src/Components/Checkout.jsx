@@ -416,12 +416,11 @@ function PaymentDetails({
       <div className="payment-method-content">
         {paymentMethod === "Razorpay" && (
           <div className="razorpay-payment-content">
-            <h3>UPI</h3>
-            <p>Total Amount: ₹{totalPrice}</p>
+           
             {/* If payment is not yet verified, show "Pay Now" */}
             <button
               onClick={handleRazorpayPayment}
-              className="btn btn-outline-primary"
+              className="btn btn-outline-primary button-razorpay"
               disabled={false}
             >
               Pay Now

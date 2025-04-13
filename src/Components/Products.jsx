@@ -7,13 +7,12 @@ import WishlistFilledImage from "../assets/wishlist-svgrepo-com copy.svg";
 import CartImage from "../assets/cart-svgrepo-com copy.svg";
 import { useLocation, useNavigate } from "react-router-dom";
 import { db } from "../../configs";
-import {
-  addToCartTable,
-  wishlistTable,
-} from "../../configs/schema";
+import { addToCartTable, wishlistTable } from "../../configs/schema";
 import { and, eq } from "drizzle-orm";
 import { UserContext } from "../contexts/UserContext";
 import { CartContext } from "../contexts/CartContext";
+import { useUser } from "@clerk/clerk-react";
+import { Navigate } from "react-router-dom";
 
 // -------------------------------
 // Modal Component (Detailed Perfume Info)
@@ -210,10 +209,12 @@ const Products = () => {
   const { setCart, cart, wishlist, setWishlist } = useContext(CartContext);
   const { userdetails } = useContext(UserContext);
   const [showRegisterModal, setShowRegisterModal] = useState(false);
+  const { user } = useUser();
+  const navigate = useNavigate();
   let count = 1;
 
   // Combined useEffect to disable scrolling when any modal is open
-  useEffect(() => { 
+  useEffect(() => {
     if (modalProduct || showRegisterModal) {
       document.body.style.overflow = "hidden";
       document.documentElement.style.overflow = "hidden";
@@ -222,9 +223,9 @@ const Products = () => {
       document.documentElement.style.overflow = "auto";
     }
   }, [modalProduct, showRegisterModal]);
-  
 
   const addtocart = async (product) => {
+    if (!user) navigate("/login");
     // If the user is not logged in, show the modal and return early.
     if (!userdetails) {
       setShowRegisterModal(true);
@@ -245,7 +246,10 @@ const Products = () => {
       const res1 = await db
         .insert(addToCartTable)
         .values({ productId: product.id, userId: userdetails?.id })
-        .returning({ cartId: addToCartTable.id, userId: addToCartTable.userId });
+        .returning({
+          cartId: addToCartTable.id,
+          userId: addToCartTable.userId,
+        });
 
       // Replace temporary cart item with the actual DB response
       setCart((prev) =>
@@ -258,22 +262,27 @@ const Products = () => {
     } catch (error) {
       console.error("Failed to add to cart:", error);
       // Remove the temporary item if the DB call fails
-      setCart((prev) => prev.filter((item) => item.cartId !== tempCartItem.cartId));
+      setCart((prev) =>
+        prev.filter((item) => item.cartId !== tempCartItem.cartId)
+      );
     } finally {
       setLoading(false);
     }
   };
 
   const removeFromCart = async (product) => {
+    if (!user) navigate("/login");
     const backupCart = [...cart];
     try {
       setCart((prev) => prev.filter((item) => item.product.id !== product.id));
-      await db.delete(addToCartTable).where(
-        and(
-          eq(addToCartTable.userId, userdetails?.id),
-          eq(addToCartTable.productId, product?.id)
-        )
-      );
+      await db
+        .delete(addToCartTable)
+        .where(
+          and(
+            eq(addToCartTable.userId, userdetails?.id),
+            eq(addToCartTable.productId, product?.id)
+          )
+        );
     } catch (error) {
       setCart(backupCart);
     } finally {
@@ -282,6 +291,7 @@ const Products = () => {
   };
 
   const toggleWishlist = async (product) => {
+    if (!user) navigate("/login");
     const tempWishlistItem = {
       productId: product.id,
       wishlistId: `temp-${product.id + count++}`,
@@ -300,12 +310,14 @@ const Products = () => {
         setWishlist((prev) =>
           prev.filter((item) => item.productId !== product.id)
         );
-        await db.delete(wishlistTable).where(
-          and(
-            eq(wishlistTable.userId, userdetails?.id),
-            eq(wishlistTable.productId, product.id)
-          )
-        );
+        await db
+          .delete(wishlistTable)
+          .where(
+            and(
+              eq(wishlistTable.userId, userdetails?.id),
+              eq(wishlistTable.productId, product.id)
+            )
+          );
       } else {
         // Add to wishlist in DB
         const res = await db

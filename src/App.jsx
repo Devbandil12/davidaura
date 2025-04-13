@@ -1,4 +1,5 @@
 // src/App.js
+import ProtectedRoute from "./Components/ProtectedRoutes"; // ✅ Import the wrapper
 
 import React, { useState, useEffect, useCallback } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
@@ -95,32 +96,65 @@ const App = () => {
                       }
                     />
                     <Route path="/login" element={<Login />} />
-                    <Route path="/myorder" element={<MyOrder />} />
+                    <Route
+                      path="/myorder"
+                      element={
+                        <ProtectedRoute>
+                          <MyOrder />
+                        </ProtectedRoute>
+                      }
+                    />
                     <Route
                       path="/wishlist"
                       element={
-                        <Wishlist
-                          wishlist={wishlist}
-                          setWishlist={setWishlist}
-                          cart={cart}
-                          setCart={setCart}
-                        />
+                        <ProtectedRoute>
+                          <Wishlist
+                            wishlist={wishlist}
+                            setWishlist={setWishlist}
+                            cart={cart}
+                            setCart={setCart}
+                          />
+                        </ProtectedRoute>
                       }
                     />
                     <Route
                       path="/cart"
                       element={
-                        <Cart
-                          cart={cart}
-                          setCart={setCart}
-                          wishlist={wishlist}
-                          setWishlist={setWishlist}
-                        />
+                        <ProtectedRoute>
+                          <Cart
+                            cart={cart}
+                            setCart={setCart}
+                            wishlist={wishlist}
+                            setWishlist={setWishlist}
+                          />
+                        </ProtectedRoute>
                       }
                     />
-                    <Route path="/checkout" element={<Checkout />} />
-                    <Route path="/Admin" element={<Adminpannel />} />
-                    <Route path="/contact" element={<ContactUs />} />
+                    <Route
+                      path="/checkout"
+                      element={
+                        <ProtectedRoute>
+                          <Checkout />
+                        </ProtectedRoute>
+                      }
+                    />
+
+                    <Route
+                      path="/Admin"
+                      element={
+                        <ProtectedRoute>
+                          <Adminpannel />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route
+                      path="/contact"
+                      element={
+                        <ProtectedRoute>
+                          <ContactUs />
+                        </ProtectedRoute>
+                      }
+                    />
                   </Routes>
                   <Footer />
                 </>

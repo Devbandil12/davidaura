@@ -25,7 +25,7 @@ export const OrderProvider = ({ children }) => {
           orderId: ordersTable.id,
           userId: ordersTable.userId,
           userName: usersTable.name,
-          phone: usersTable.phone,
+          phone: usersTable.email,
           paymentMode: ordersTable.paymentMode,
           totalAmount: ordersTable.totalAmount,
           paymentStatus: ordersTable.paymentStatus,

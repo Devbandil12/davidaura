@@ -345,7 +345,7 @@ h2 {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 1.2rem;
+  font-size: 1rem;
   font-weight: bold;
 }
 .payment-total-price {
@@ -543,6 +543,12 @@ h2 {
 }
 
 @media (max-width: 480px) {
+  .button-razorpay{
+    align-self:"flex-end";
+    margin-top:20px;
+    
+  }
+  
   .checkout-wrapper {
     max-width: 1200px;
     margin: 50px auto;
